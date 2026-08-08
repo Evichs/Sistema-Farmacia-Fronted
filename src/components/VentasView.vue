@@ -254,7 +254,7 @@ const processSale = async () => {
         estado_detalle_venta: true
       };
 
-      const detRes = await fetch(`${API_URL}/detalle-venta`, {
+      const detRes = await fetch(`${API_URL}/detalles-venta`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(detailPayload)

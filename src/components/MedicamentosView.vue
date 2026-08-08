@@ -74,7 +74,7 @@ const handleSearch = async () => {
   }
   // Filtrado local para búsqueda instantánea avanzada en el frontend
   try {
-    const res = await fetch(`${API_URL}/medicamentos?limite=200`);
+    const res = await fetch(`${API_URL}/medicamentos?limite=100`);
     if (res.ok) {
       const data = await res.json();
       const allMeds = data.datos || [];

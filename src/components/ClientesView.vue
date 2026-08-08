@@ -46,7 +46,7 @@ const handleSearch = async () => {
   }
   // Búsqueda local avanzada
   try {
-    const res = await fetch(`${API_URL}/clientes?limite=200`);
+    const res = await fetch(`${API_URL}/clientes?limite=100`);
     if (res.ok) {
       const data = await res.json();
       const allClients = data.datos || [];

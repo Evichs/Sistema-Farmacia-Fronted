@@ -68,7 +68,7 @@ const handleSearch = async () => {
   }
   // Búsqueda local cruzando lotes con nombres de medicamentos
   try {
-    const res = await fetch(`${API_URL}/lotes?limite=200`);
+    const res = await fetch(`${API_URL}/lotes?limite=100`);
     if (res.ok) {
       const data = await res.json();
       const allLotes = data.datos || [];

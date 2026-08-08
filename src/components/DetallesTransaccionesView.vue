@@ -21,17 +21,17 @@ const metodosPagoList = ref([]);
 
 const loadCatalogs = async () => {
   try {
-    const medRes = await fetch(`${API_URL}/medicamentos?limite=200`);
+    const medRes = await fetch(`${API_URL}/medicamentos?limite=100`);
     if (medRes.ok) {
       const d = await medRes.json();
       medicamentosList.value = d.datos || [];
     }
-    const provRes = await fetch(`${API_URL}/proveedores?limite=200`);
+    const provRes = await fetch(`${API_URL}/proveedores?limite=100`);
     if (provRes.ok) {
       const d = await provRes.json();
       proveedoresList.value = d.datos || [];
     }
-    const metRes = await fetch(`${API_URL}/metodos-pago?limite=200`);
+    const metRes = await fetch(`${API_URL}/metodos-pago?limite=100`);
     if (metRes.ok) {
       const d = await metRes.json();
       metodosPagoList.value = d.datos || [];
@@ -44,7 +44,7 @@ const loadCatalogs = async () => {
 const loadDetallesVenta = async () => {
   loading.value = true;
   try {
-    const res = await fetch(`${API_URL}/detalle-venta?limite=100`);
+    const res = await fetch(`${API_URL}/detalles-venta?limite=100`);
     if (res.ok) {
       const data = await res.json();
       list.value = data.datos || [];
@@ -60,7 +60,7 @@ const loadDetallesVenta = async () => {
 const loadDetallesCompra = async () => {
   loading.value = true;
   try {
-    const res = await fetch(`${API_URL}/detalle-compra?limite=100`);
+    const res = await fetch(`${API_URL}/detalles-compra?limite=100`);
     if (res.ok) {
       const data = await res.json();
       list.value = data.datos || [];

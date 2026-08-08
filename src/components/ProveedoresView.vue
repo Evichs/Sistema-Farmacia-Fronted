@@ -70,7 +70,7 @@ const handleSearch = async () => {
   }
   // Búsqueda local avanzada
   try {
-    const res = await fetch(`${API_URL}/proveedores?limite=200`);
+    const res = await fetch(`${API_URL}/proveedores?limite=100`);
     if (res.ok) {
       const data = await res.json();
       const allProvs = data.datos || [];

@@ -12,6 +12,7 @@ const selectedProveedorId = ref('');
 const searchMedTerm = ref('');
 const medSearchResults = ref([]);
 const purchaseItems = ref([]);
+const isFocused = ref(false);
 
 // Formulario de Lote temporal para el producto seleccionado
 const activeMed = ref(null);
@@ -48,15 +49,15 @@ onMounted(() => {
 });
 
 const handleMedSearch = () => {
+  const activeMeds = medicamentosList.value.filter(m => m.estado_medicamento);
   if (!searchMedTerm.value) {
-    medSearchResults.value = [];
+    medSearchResults.value = activeMeds;
     return;
   }
   const term = searchMedTerm.value.toLowerCase();
-  medSearchResults.value = medicamentosList.value.filter(m => 
-    m.estado_medicamento &&
-    (m.nombre_medicamento.toLowerCase().includes(term) ||
-     (m.codigo_barras_medicamento && m.codigo_barras_medicamento.toLowerCase().includes(term)))
+  medSearchResults.value = activeMeds.filter(m => 
+    m.nombre_medicamento.toLowerCase().includes(term) ||
+    (m.codigo_barras_medicamento && m.codigo_barras_medicamento.toLowerCase().includes(term))
   );
 };
 
@@ -176,7 +177,7 @@ const savePurchase = async () => {
         estado_compra: true
       };
 
-      const detRes = await fetch(`${API_URL}/detalle-compra`, {
+      const detRes = await fetch(`${API_URL}/detalles-compra`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(detailPayload)
@@ -243,11 +244,13 @@ const formatCurrency = (val) => {
           <input type="text" class="form-control" 
                  v-model="searchMedTerm" 
                  @input="handleMedSearch" 
+                 @focus="isFocused = true; handleMedSearch()"
+                 @blur="setTimeout(() => isFocused = false, 200)"
                  placeholder="Buscar por código de barras o nombre del medicamento...">
         </div>
         
         <!-- Resultados Autocomplete -->
-        <ul v-if="medSearchResults.length > 0" class="autocomplete-results">
+        <ul v-if="isFocused && medSearchResults.length > 0" class="autocomplete-results">
           <li v-for="med in medSearchResults" :key="med.id_medicamento" class="autocomplete-item" @click="selectMedForPurchase(med)">
             <div>
               <span style="font-weight:600;">{{ med.nombre_medicamento }}</span>
