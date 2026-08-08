@@ -12,8 +12,9 @@ import CatalogosAuxView from './components/CatalogosAuxView.vue';
 import UsuariosView from './components/UsuariosView.vue';
 import PerfilView from './components/PerfilView.vue';
 
+
 // Configuración de la URL de API
-const API_URL = 'http://localhost:3000/api';
+const API_URL = import.meta.env.VITE_API_URL;
 provide('API_URL', API_URL);
 
 // Estados globales
