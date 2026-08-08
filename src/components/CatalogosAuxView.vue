@@ -42,7 +42,7 @@ const loadPresentaciones = async () => {
 
 const loadCasasMedicas = async () => {
   try {
-    const res = await fetch(`${API_URL}/casa-medica?limite=100`);
+    const res = await fetch(`${API_URL}/casas-medicas?limite=100`);
     if (res.ok) {
       const data = await res.json();
       casasMedicasList.value = data.datos || [];
@@ -116,13 +116,13 @@ const saveCasaMedica = async () => {
   try {
     let res;
     if (casaEditingId.value) {
-      res = await fetch(`${API_URL}/casa-medica/${casaEditingId.value}`, {
+      res = await fetch(`${API_URL}/casas-medicas/${casaEditingId.value}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
     } else {
-      res = await fetch(`${API_URL}/casa-medica`, {
+      res = await fetch(`${API_URL}/casas-medicas`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -141,7 +141,7 @@ const saveCasaMedica = async () => {
 const deleteCasaMedica = async (id, name) => {
   if (confirm(`¿Eliminar la casa médica "${name}"?`)) {
     try {
-      const res = await fetch(`${API_URL}/casa-medica/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${API_URL}/casas-medicas/${id}`, { method: 'DELETE' });
       if (res.ok || res.status === 204) {
         addAlert(`Casa médica "${name}" eliminada.`, 'success');
         loadCasasMedicas();

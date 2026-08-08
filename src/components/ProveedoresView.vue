@@ -28,7 +28,7 @@ const formEstado = ref(true);
 
 const loadCasasMedicas = async () => {
   try {
-    const res = await fetch(`${API_URL}/casa-medica?limite=100`);
+    const res = await fetch(`${API_URL}/casas-medicas?limite=100`);
     if (res.ok) {
       const data = await res.json();
       casasMedicasList.value = data.datos || [];
