@@ -9,10 +9,8 @@ const medicamentosList = ref([]);
 
 // Formulario de Compra
 const selectedProveedorId = ref('');
-const searchMedTerm = ref('');
-const medSearchResults = ref([]);
+const selectedMedId = ref('');
 const purchaseItems = ref([]);
-const isFocused = ref(false);
 
 // Formulario de Lote temporal para el producto seleccionado
 const activeMed = ref(null);
@@ -48,17 +46,16 @@ onMounted(() => {
   loadData();
 });
 
-const handleMedSearch = () => {
-  const activeMeds = medicamentosList.value.filter(m => m.estado_medicamento);
-  if (!searchMedTerm.value) {
-    medSearchResults.value = activeMeds;
-    return;
+const activeMedicamentosList = computed(() => {
+  return medicamentosList.value.filter(m => m.estado_medicamento);
+});
+
+const onMedSelect = () => {
+  if (!selectedMedId.value) return;
+  const med = medicamentosList.value.find(m => m.id_medicamento === Number(selectedMedId.value));
+  if (med) {
+    selectMedForPurchase(med);
   }
-  const term = searchMedTerm.value.toLowerCase();
-  medSearchResults.value = activeMeds.filter(m => 
-    m.nombre_medicamento.toLowerCase().includes(term) ||
-    (m.codigo_barras_medicamento && m.codigo_barras_medicamento.toLowerCase().includes(term))
-  );
 };
 
 const selectMedForPurchase = (med) => {
@@ -67,9 +64,6 @@ const selectMedForPurchase = (med) => {
   batchQty.value = 10; // Cantidad sugerida inicial
   batchExpiry.value = '';
   batchProduction.value = '';
-  
-  searchMedTerm.value = '';
-  medSearchResults.value = [];
 };
 
 const addItemToPurchase = () => {
@@ -97,6 +91,7 @@ const addItemToPurchase = () => {
 
   // Reset de selección temporal
   activeMed.value = null;
+  selectedMedId.value = '';
 };
 
 const removeItem = (medId) => {
@@ -237,28 +232,18 @@ const formatCurrency = (val) => {
         </div>
       </div>
 
-      <!-- Buscador de Medicamento -->
-      <div class="stats-card" style="position: relative; overflow: visible;">
-        <h4 class="pos-section-title">Buscar Medicamentos a Adquirir</h4>
+      <!-- Seleccionar Medicamento -->
+      <div class="stats-card">
+        <h4 class="pos-section-title">Seleccionar Medicamento a Adquirir</h4>
         <div class="form-group" style="margin-bottom: 0;">
-          <input type="text" class="form-control" 
-                 v-model="searchMedTerm" 
-                 @input="handleMedSearch" 
-                 @focus="isFocused = true; handleMedSearch()"
-                 @blur="setTimeout(() => isFocused = false, 200)"
-                 placeholder="Buscar por código de barras o nombre del medicamento...">
+          <label class="form-label">Seleccionar Medicamento *</label>
+          <select class="form-control" v-model="selectedMedId" @change="onMedSelect">
+            <option value="" disabled>-- Seleccione un medicamento del catálogo --</option>
+            <option v-for="med in activeMedicamentosList" :key="med.id_medicamento" :value="med.id_medicamento">
+              {{ med.nombre_medicamento }} (Stock: {{ med.existencia_total_medicamento }})
+            </option>
+          </select>
         </div>
-        
-        <!-- Resultados Autocomplete -->
-        <ul v-if="isFocused && medSearchResults.length > 0" class="autocomplete-results">
-          <li v-for="med in medSearchResults" :key="med.id_medicamento" class="autocomplete-item" @click="selectMedForPurchase(med)">
-            <div>
-              <span style="font-weight:600;">{{ med.nombre_medicamento }}</span>
-              <div style="font-size:11px; color:var(--text-muted);">Stock actual: {{ med.existencia_total_medicamento }}</div>
-            </div>
-            <span style="font-weight:700; color:var(--primary-color);">Venta: {{ formatCurrency(med.precio_venta) }}</span>
-          </li>
-        </ul>
       </div>
 
       <!-- Configuración del Lote para el Producto Seleccionado -->
@@ -288,7 +273,7 @@ const formatCurrency = (val) => {
         </div>
 
         <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 10px;">
-          <button class="btn btn-secondary" @click="activeMed = null">Cancelar</button>
+          <button class="btn btn-secondary" @click="activeMed = null; selectedMedId = ''">Cancelar</button>
           <button class="btn btn-primary" @click="addItemToPurchase">Agregar a la Lista de Compra</button>
         </div>
       </div>
