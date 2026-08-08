@@ -238,7 +238,7 @@ const formatCurrency = (val) => {
       </div>
 
       <!-- Buscador de Medicamento -->
-      <div class="stats-card" style="position: relative;">
+      <div class="stats-card" style="position: relative; overflow: visible;">
         <h4 class="pos-section-title">Buscar Medicamentos a Adquirir</h4>
         <div class="form-group" style="margin-bottom: 0;">
           <input type="text" class="form-control" 
